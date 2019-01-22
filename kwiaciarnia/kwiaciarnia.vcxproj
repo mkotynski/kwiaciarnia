@@ -106,10 +106,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>C:\Users\kotyn\OneDrive - Wojskowa Akademia Techniczna\Dokumenty\Projekty\mysql-8.0.13-winx64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\kotyn\OneDrive - Wojskowa Akademia Techniczna\Dokumenty\Projekty\mysql-8.0.13-winx64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmysql.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,16 +154,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="admin.h" />
+    <ClInclude Include="assortment.h" />
+    <ClInclude Include="client.h" />
+    <ClInclude Include="database.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="offer.h" />
+    <ClInclude Include="order.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="session.h" />
+    <ClInclude Include="user.h" />
+    <ClInclude Include="validation.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="admin.cpp" />
+    <ClCompile Include="assortment.cpp" />
+    <ClCompile Include="client.cpp" />
+    <ClCompile Include="database.cpp" />
     <ClCompile Include="kwiaciarnia.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="offer.cpp" />
+    <ClCompile Include="order.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="session.cpp" />
+    <ClCompile Include="user.cpp" />
+    <ClCompile Include="validation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
