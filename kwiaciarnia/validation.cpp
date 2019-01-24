@@ -51,3 +51,17 @@ std::string validation::returnDayName(int date)
 	}
 	return 0;
 }
+
+int validation::conv(std::string a) {
+	int v = 0;
+	for (int b = 0; b < a.length(); b++) v = v * 10 + a[b] - 48;
+
+	return v;
+}
+bool validation::isnum(std::string t) {
+	for (int a = 0; a < t.length(); a++) {
+		if (t[a] > '0' + 9 || t[a] < '0') return false;
+
+	}
+	return true;
+}

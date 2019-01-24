@@ -126,7 +126,7 @@ void admin::deleteOffert(database& mysql)
 		/****/
 		list.clear();
 		snlist.clear();
-		list = _a.retAllAssortment(mysql);
+		list = _a.retAllAssortment(mysql,"");
 		for (int i = 0; i < list.size(); i++)
 		{
 			assort = list[i].name + " [" + list[i].price + " PLN]";

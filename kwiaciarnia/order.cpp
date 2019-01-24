@@ -29,7 +29,7 @@ order::order(database & mysql, std::string id_order)
 
 bool order::_insert(database &mysql)
 {
-	bool t = mysql.query("INSERT INTO `flwr_order` (`id_client`, `status`, `date_order`,) VALUES ('" + id_client + "', '0', (select current_date));");
+	bool t = mysql.query("INSERT INTO `flwr_order` (`id_client`, `status`, `date_order`, `cost`) VALUES ('" + id_client + "', '0', (select current_date)), '" + cost + "' ");
 	if (t == false) return false;
 	else return true;
 }

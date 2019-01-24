@@ -12,5 +12,7 @@ public:
 	static int isAppropriateLength(std::string str, int minLength, int maxLength);
 	static bool isDate(std::string date);
 	static std::string returnDayName(int date);
+	static int conv(std::string a);
+	static bool isnum(std::string t);
 };
 

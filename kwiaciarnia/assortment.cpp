@@ -55,12 +55,12 @@ bool assortment::_update(database &mysql)
 	else return true;
 }
 
-std::vector<assortment> assortment::retAllAssortment(database mysql)
+std::vector<assortment> assortment::retAllAssortment(database mysql, std::string where)
 {
 	MYSQL_RES *res_set;
 	MYSQL_ROW row;
 	std::vector<assortment> assorts;
-	std::string query = "select flwr_assortment.id_assortment from flwr_assortment";
+	std::string query = "select flwr_assortment.id_assortment from flwr_assortment"+where;
 	mysql_query(mysql.connect, query.c_str());
 	res_set = mysql_store_result(mysql.connect);
 	int numrows = mysql_num_rows(res_set);

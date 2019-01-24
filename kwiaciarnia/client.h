@@ -3,6 +3,9 @@
 #include "assortment.h"
 #include "menu.h"
 #include "order.h"
+#include "pos_order.h"
+#include "validation.h"
+
 typedef std::vector<std::string> obj;
 class client : public user
 {

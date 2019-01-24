@@ -111,7 +111,8 @@ std::vector<client> client::retAllClients(database mysql)
 void client::makeOrder(database &mysql)
 {
 	assortment _a;
-	int cnt = 0;
+	std::string ab;
+	std::string where;
 	menu mx("Oferta");
 	std::vector<std::string> snlist;
 	std::vector<assortment> cart;
@@ -126,24 +127,29 @@ void client::makeOrder(database &mysql)
 		/****/
 		list.clear();
 		snlist.clear();
-		list = _a.retAllAssortment(mysql);
+		list = _a.retAllAssortment(mysql,where);
 		for (int i = 0; i < list.size(); i++)
 		{
 			assort = std::to_string(i+1) + ". " +list[i].name + " [" + list[i].price + " PLN]";
+			if (i == list.size() - 1) assort += "\n\n";
 			snlist.push_back(assort);
 		}
+		snlist.push_back("--[FILTR WYSZUKIWANIA]--");
 		snlist.push_back("--[EDYTUJ KOSZYK]--");
 		snlist.push_back("--[ZATWIERDZ ZAKUP]--");
 		snlist.push_back("[COFNIJ]");
 		mx.setOptionVector(snlist);
 		/****/
 		system("cls");
+		int cost = 0;
 		std::cout << " --- WYBIERZ PRZEDMIOT KTORY CHCESZ DODAC DO KOSZYKA --- " << std::endl;
 		std::cout << "\nTWOJ KOSZYK: \n";
 		for (int i = 0; i < cart.size(); i++)
 		{
 			std::cout << std::to_string(i+1) + ". " + cart[i].name << " |\t ILOSC: " << count[i] << "\n";
+			cost = cost + std::stoi(cart[i].price)*count[i];
 		}
+		std::cout << "\nAKTUALNA WARTOSC KOSZYKA: " << cost << " PLN";
 		std::cout << "\n\n--- OFERTA ---\n";
 		mx.write(xpointer, xenter);
 		mx.setPointer(xpointer, xenter);
@@ -152,10 +158,33 @@ void client::makeOrder(database &mysql)
 			if (xpointer == mx.option.size()) xpointer = 0;
 			else if (xpointer == mx.option.size()-1)
 			{
-				order _order;
-				_order.id_client = id_client;
-				_order._insert(mysql);
-
+				for (int a = 0; a < cart.size(); a++)
+				{
+					cost = cost + std::stoi(cart[a].price)*count[a];
+				}
+				if (cost > 0)
+				{
+					order _order;
+					_order.id_client = id_client;
+					_order._insert(mysql);
+					obj ret = mysql.retRow("select max(id_order) from flwr_order");
+					for (int a = 0; a < cart.size(); a++)
+					{
+						pos_order _pos_order;
+						_pos_order.id_order = ret[1];
+						_pos_order.id_assortment = cart[a].id_assortment;
+						_pos_order.count = std::to_string(count[a]);
+						_pos_order._insert(mysql);
+					}
+					order _o(mysql, ret[1]);
+					_o.cost = cost;
+					_o._update(mysql);
+					std::cout << "DODANO NOWE ZAMOWIENIE o wartosci " << cost << " PLN - CZEKAJ NA POTWIERDZENIE";
+					_getch();
+					cart.clear();
+					count.clear();
+				}
+				else std::cout << "Nie mozesz zlozyc pustego zamowienia";
 			}
 			else if (xpointer == mx.option.size()-2)
 			{
@@ -165,7 +194,6 @@ void client::makeOrder(database &mysql)
 				while (zpointer)
 				{
 					/****/
-					cnt = 0;
 					list.clear();
 					snlist.clear();
 					for (int i = 0; i < cart.size(); i++)
@@ -181,14 +209,20 @@ void client::makeOrder(database &mysql)
 					std::cout << "\nTWOJ KOSZYK: \n";
 					mx.write(zpointer, zenter);
 					//std::cout << "Wcisnij strzalke w prawo aby edytowac / w lewo zeby usunac pozyje";
-
 						int it = _getch();
 						if (it == 77)
 						{
 							std::cout << "\nEdytowanie ilosci \n";
 							std::cout << "Podaj nowa ilosc: ";
-							std::cin >> cnt;
-							count[zpointer - 1] = cnt;
+							getline(std::cin, ab);
+							if (validation::isnum(ab)) {
+								int a = validation::conv(ab);
+								if (a > 0)
+								{
+									count[zpointer - 1] = a;
+									std::cout << "Zmieniono ilosc wybranego przedmiotu";
+								}
+							}
 						}
 						else if (it == 75)
 						{
@@ -218,6 +252,13 @@ void client::makeOrder(database &mysql)
 					}
 				}
 			}
+			else if (xpointer == mx.option.size() - 3)
+			{
+				std::string filtr;
+				std::cout << "\nFiltruj wyniki wyszukiwania po nazwie: ";
+				getline(std::cin, filtr);
+				where = " where upper(name) like upper('%" + filtr + "%')";
+			}
 			else
 			{
 				bool is = 0;
@@ -235,16 +276,28 @@ void client::makeOrder(database &mysql)
 				{
 					cart.push_back(a);
 					std::cout << "\n Podaj ilosc: ";
-					std::cin >> cnt;
-					count.push_back(cnt);
-					std::cout << "Dodano do koszyka";
+					getline(std::cin, ab);
+					if (validation::isnum(ab)) {
+						int a = validation::conv(ab);
+						if (a > 0)
+						{
+							count.push_back(a);
+							std::cout << "Dodano do koszyka";
+						}
+					}
 				}
 				if (is == 1)
 				{
 					std::cout << "\n Podaj nowa ilosc: ";
-					std::cin >> cnt;
-					count[j] = cnt;
-					std::cout << "Zmieniono ilosc wybranego przedmiotu";
+					getline(std::cin, ab);
+					if (validation::isnum(ab)) {
+						int a = validation::conv(ab);
+						if (a > 0)
+						{
+							count[j] = a;
+							std::cout << "Zmieniono ilosc wybranego przedmiotu";
+						}
+					}
 				}
 			}
 			xenter = 0;

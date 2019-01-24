@@ -1,4 +1,2 @@
-﻿  client.cpp
-c:\users\kotyn\onedrive - wojskowa akademia techniczna\dokumenty\projekty\kwiaciarnia\kwiaciarnia\client.cpp(89): warning C4244: "inicjowanie": konwersja z "my_ulonglong" do "int", możliwa utrata danych
-c:\users\kotyn\onedrive - wojskowa akademia techniczna\dokumenty\projekty\kwiaciarnia\kwiaciarnia\client.cpp(199): warning C4267: "=": konwersja z "size_t" do "int", możliwa utrata danych
+﻿  validation.cpp
   kwiaciarnia.vcxproj -> C:\Users\kotyn\OneDrive - Wojskowa Akademia Techniczna\Dokumenty\Projekty\kwiaciarnia\x64\Debug\kwiaciarnia.exe
