@@ -45,8 +45,13 @@ bool user::_insert(database &mysql)
 
 bool user::_delete(database &mysql)
 {
+	std::cout << "tutaj jestem-";
+	std::cout << id_user;
+	_getch();
 	if (mysql.isExist("SELECT * FROM `flwr_user` WHERE `id_user` = '" + id_user + "'"))
 	{
+		std::cout << "here-";
+		_getch();
 		bool t = mysql.query("DELETE FROM `flwr_user` WHERE `flwr_user`.`id_user` = '"+id_user+"'");
 		if (t == false) return false;
 		else return true;

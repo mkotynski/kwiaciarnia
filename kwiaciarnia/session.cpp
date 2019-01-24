@@ -18,8 +18,8 @@ bool session::login(database &mysql)
 	bool logged = 0;
 	obj log;
 	std::string login,pass;
-	login = "admin";
-	pass = "admin";
+	login = "user";
+	pass = "nazw";
 	std::string query;
 	permission = 0;
 	while (!logged)
@@ -117,35 +117,35 @@ void session::setMenu(menu &m)
 
 
 void session::getOptionForClient(database mysql, menu m, int &pointer, int &enter)
-{/*
+{
 	switch (pointer)
 	{
 	case 1: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_patient.writeInfo(mysql);
+		_client.makeOrder(mysql);
 		//_getch();
 	}; break;
 	case 2: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_patient.registerForVisit(mysql);
+		//_patient.registerForVisit(mysql);
 		//_getch();
 	}; break;
 	case 3: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_patient.visitList(mysql);
+		//_patient.visitList(mysql);
 		//_getch();
 	}; break;
 	case 4: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_patient.getOption_callOfVisit(mysql, m, pointer, enter);
+		//_patient.getOption_callOfVisit(mysql, m, pointer, enter);
 		//_getch();
 	}; break;
 	}
-	enter = 0;*/
+	enter = 0;
 }
 
 

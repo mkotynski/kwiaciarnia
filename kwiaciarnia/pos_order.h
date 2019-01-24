@@ -4,13 +4,13 @@
 
 typedef std::vector<std::string> obj;
 
-class order
+class pos_order
 {
-	std::string id_order, id_client, status, date_order, date_realization;
 public:
-	order();
-	~order();
-	order(database & mysql, std::string id_order);
+	std::string id_pos_order, id_order, id_assortment, count;
+	pos_order();
+	~pos_order();
+	pos_order(database & mysql, std::string id_pos_order);
 	bool _insert(database & mysql);
 	bool _delete(database & mysql);
 	bool _update(database & mysql);

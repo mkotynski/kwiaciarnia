@@ -64,10 +64,8 @@ void admin::deleteClient(database& mysql)
 		/****/
 		list.clear();
 		snlist.clear();
-		_getch();
 		list = _c.retAllClients(mysql);
-		std::cout << list.size();
-		_getch();
+		//std::cout << list.size();
 		for (int i = 0; i < list.size(); i++)
 		{
 			clnt = list[i].surname + " " + list[i].name + " [" + list[i].login + "]";
@@ -86,7 +84,9 @@ void admin::deleteClient(database& mysql)
 			else
 			{
 				client c(mysql, list[xpointer - 1].id_client);
-				if (!c._delete(mysql)) std::cout << "Usunieto klienta";
+				std::cout << c.id_user;
+				_getch();
+				if (!c._deleteC(mysql)) std::cout << "Usunieto klienta";
 				else std::cout << "Nie mozna usunac";
 				_getch();
 				xenter = 0;

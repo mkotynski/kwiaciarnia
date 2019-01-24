@@ -61,8 +61,9 @@ bool client::_deleteC(database &mysql)
 {
 	if (mysql.isExist("SELECT * FROM `flwr_client` WHERE `id_client` = '" + id_client + "'"))
 	{
-		this->_delete(mysql);
+		user u(mysql, id_user);
 		bool t = mysql.query("DELETE FROM `flwr_client` WHERE `flwr_client`.`id_client` = '" + id_client + "'");
+		u._delete(mysql);
 		if (t == false) return false;
 		else return true;
 	}
@@ -82,7 +83,7 @@ std::vector<client> client::retAllClients(database mysql)
 	MYSQL_RES *res_set;
 	MYSQL_ROW row;
 	std::vector<client> clients;
-	std::string query = "select flwr_client.id_client from flwr_client inner join flwr_user on flwr_client.id_client = flwr_user.id_client";
+	std::string query = "select flwr_client.id_client from flwr_client";
 	mysql_query(mysql.connect, query.c_str());
 	res_set = mysql_store_result(mysql.connect);
 	int numrows = mysql_num_rows(res_set);
@@ -96,13 +97,18 @@ std::vector<client> client::retAllClients(database mysql)
 		{
 			if (i == 0)
 			{
-				std::cout << "\n" <<row[i];
-				/*client cx(mysql, row[i]);
-				c = cx;*/
+				//std::cout << row[i] << "\n";
+				client cx(mysql, row[i]);
+				c = cx;
 			}
 			i++;
 		}
-		//clients.push_back(c);
+		clients.push_back(c);
 	}
 	return clients;
+}
+
+void client::makeOrder(database &mysql)
+{
+
 }

@@ -14,5 +14,6 @@ public:
 	bool _deleteC(database &mysql);
 	bool _updateC(database &mysql);
 	std::vector<client> retAllClients(database mysql);
+	void makeOrder(database & mysql);
 };
 

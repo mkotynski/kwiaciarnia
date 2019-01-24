@@ -162,6 +162,7 @@
     <ClInclude Include="offer.h" />
     <ClInclude Include="order.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="pos_order.h" />
     <ClInclude Include="session.h" />
     <ClInclude Include="user.h" />
     <ClInclude Include="validation.h" />
@@ -181,6 +182,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="pos_order.cpp" />
     <ClCompile Include="session.cpp" />
     <ClCompile Include="user.cpp" />
     <ClCompile Include="validation.cpp" />
