@@ -111,7 +111,7 @@ void session::setMenu(menu &m)
 	}
 	if (permission == 1)
 	{
-		obj list = { "POTWIERDZ ZAMOWIENIE", "ZAMOWIENIA POTWIERDZONE","HISTORIA ZAMOWIEN", "DODAJ KLIENTA","USUN KLIENA","DODAJ NOWA OFERTE","EDYTUJ OFERTE", "USUN OFERTE", "WYLOGUJ" };
+		obj list = { "POTWIERDZ/ANULUJ ZAMOWIENIE", "ZAMOWIENIA POTWIERDZONE","HISTORIA ZAMOWIEN", "DODAJ KLIENTA","USUN KLIENA","DODAJ NOWA OFERTE","EDYTUJ OFERTE", "USUN OFERTE", "WYLOGUJ" };
 		m.setOptionVector(list);
 	}
 }
@@ -163,7 +163,7 @@ void session::getOptionForAdmin(database mysql, menu m, int &pointer, int &enter
 	case 1: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin.addNewClient(mysql);
+		_admin.cancelOrder(mysql);
 		//_getch();
 	}; break;
 	case 2: {

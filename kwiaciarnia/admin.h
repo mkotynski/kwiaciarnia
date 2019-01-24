@@ -13,5 +13,6 @@ public:
 	void deleteClient(database & mysql);
 	void addNewOffert(database & mysql);
 	void deleteOffert(database & mysql);
+	void cancelOrder(database mysql);
 };
 

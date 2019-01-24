@@ -152,3 +152,74 @@ void admin::deleteOffert(database& mysql)
 		}
 	}
 }
+
+
+void admin::cancelOrder(database mysql)
+{
+	order _a;
+	menu mx("Zamowienia klientow");
+	std::vector<std::string> snlist;
+	std::vector<order> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllOrders(mysql, " where status in (0,1) ");
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (stoi(list[i].status) == 0) stat = "Oczekuje na potwierdzenie";
+			else if (stoi(list[i].status) == 1) stat = "Potwierdzone - w realizacji";
+			else stat = "Nieokreslony";
+			client _client(mysql, list[i].id_client);
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order + " | PRZEZ " + _client.surname + " " + _client.name + " | " + stat;
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- POTWIERDZ / ANULUJ ZAMOWIENIE --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		int it = _getch();
+		if (it == 77)
+		{
+			order a(mysql, list[xpointer - 1].id_order);
+			a.status = "1";
+			a._update(mysql);
+			xenter = 0;
+		}
+		else if (it == 75)
+		{
+			order a(mysql, list[xpointer - 1].id_order);
+			if (!a._delete(mysql)) std::cout << "Anulowano zamowienie";
+			else std::cout << "Nie mozna anulowac";
+			xenter = 0;
+		}
+		if (it == 72)
+		{
+			if ((xpointer - 1) > 0) xpointer -= 1;
+			else xpointer = snlist.size();
+		}
+		if (it == 80)
+		{
+			if (xpointer + 1 < snlist.size() + 1) xpointer += 1;
+			else xpointer = 1;
+		}
+		if (it == 13) xenter = 1;
+
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				xenter = 0;
+			}
+		}
+	}
+}
