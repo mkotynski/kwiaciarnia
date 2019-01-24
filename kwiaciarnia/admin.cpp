@@ -10,29 +10,12 @@ admin::admin()
 
 admin::admin(database mysql, std::string id_user)
 {
-	this->id_user = id_user;
-	this->_setParameters(mysql);
+	
 }
 
 
 admin::~admin()
 {
-}
-
-bool admin::_setParameters(database & mysql)
-{
-	std::string query = "SELECT * FROM flwr_user WHERE id_user = '" + id_user + "';";
-	obj ret = mysql.retRow(query);
-	if (mysql.isExist(query))
-	{
-		this->login = ret[2];
-		this->pass = ret[3];
-		this->permission = ret[4];
-		this->id_client = ret[5];
-
-		return false;
-	}
-	else return true;
 }
 
 
@@ -63,6 +46,51 @@ void admin::addNewClient(database& mysql)
 		if (!_client._insertC(mysql))
 		{
 			std::cout << "Dodano klienta";;
+		}
+	}
+}
+
+void admin::deleteClient(database& mysql)
+{
+	client _c;
+	menu mx("Klienci");
+	std::vector<std::string> snlist;
+	std::vector<client> list;
+	std::string clnt;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		list.clear();
+		snlist.clear();
+		_getch();
+		list = _c.retAllClients(mysql);
+		std::cout << list.size();
+		_getch();
+		for (int i = 0; i < list.size(); i++)
+		{
+			clnt = list[i].surname + " " + list[i].name + " [" + list[i].login + "]";
+			snlist.push_back(clnt);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- USUN KLIENTA --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				client c(mysql, list[xpointer - 1].id_client);
+				if (!c._delete(mysql)) std::cout << "Usunieto klienta";
+				else std::cout << "Nie mozna usunac";
+				_getch();
+				xenter = 0;
+			}
 		}
 	}
 }

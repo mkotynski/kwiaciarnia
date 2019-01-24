@@ -18,14 +18,16 @@ bool session::login(database &mysql)
 	bool logged = 0;
 	obj log;
 	std::string login,pass;
+	login = "admin";
+	pass = "admin";
 	std::string query;
 	permission = 0;
 	while (!logged)
 	{
-		std::cout << "Podaj login: ";
+		/*std::cout << "Podaj login: ";
 		getline(std::cin, login);
 		std::cout << "Podaj haslo: ";
-		getline(std::cin, pass);
+		getline(std::cin, pass);*/
 		query = "SELECT * FROM `flwr_user` WHERE login = '" + login + "' and pass = '" + pass + "'";
 		if (mysql.isExist(query))
 		{
@@ -160,7 +162,7 @@ void session::getOptionForAdmin(database mysql, menu m, int &pointer, int &enter
 	case 2: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin._doctor(mysql);
+		_admin.deleteClient(mysql);
 		//_getch();
 	}; break;
 	case 3: {

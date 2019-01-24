@@ -2,9 +2,33 @@
 #include "user.h"
 
 
+bool user::_setParameters(database & mysql)
+{
+	std::string query = "SELECT * FROM flwr_user WHERE id_user = '" + id_user + "';";
+	obj ret = mysql.retRow(query);
+	if (mysql.isExist(query))
+	{
+		this->login = ret[2];
+		this->pass = ret[3];
+		this->permission = ret[4];
+		this->id_client = ret[5];
+
+		return false;
+	}
+	else return true;
+}
+
+
 user::user()
 {
 }
+
+user::user(database & mysql, std::string id_user)
+{
+	this->id_user = id_user;
+	this->_setParameters(mysql);
+}
+
 
 
 user::~user()
