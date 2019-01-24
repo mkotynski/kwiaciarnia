@@ -22,6 +22,7 @@ order::order(database & mysql, std::string id_order)
 		this->status = ret[3];
 		this->date_order = ret[4];
 		this->date_realization = ret[5];
+		this->cost = ret[6];
 		pos_order pos;
 		this->pos_orders = pos.retAllPosOrders(mysql, " where id_order = '" + id_order + "'");
 	}
@@ -31,7 +32,7 @@ order::order(database & mysql, std::string id_order)
 
 bool order::_insert(database &mysql)
 {
-	bool t = mysql.query("INSERT INTO `flwr_order` (`id_client`, `status`, `date_order`, `cost`) VALUES ('" + id_client + "', '0', (select current_date)), '" + cost + "' ");
+	bool t = mysql.query("INSERT INTO `flwr_order` (`id_client`, `status`, `date_order`, `cost`) VALUES ('" + id_client + "', '0', (select current_date), '0' )");
 	if (t == false) return false;
 	else return true;
 }
@@ -51,7 +52,7 @@ bool order::_update(database &mysql)
 {
 	if (mysql.isExist("SELECT * FROM `flwr_order` WHERE `id_order` = '" + id_order + "';"))
 	{
-		bool t = mysql.query("UPDATE `flwr_order` SET `status` = '" + status + "', `date_realization` = '" + date_realization + "' WHERE `flwr_order`.`id_order` = '" + id_order + "'");
+		bool t = mysql.query("UPDATE `flwr_order` SET `status` = '" + status + "', `date_realization` = '" + date_realization + "', `cost` = '"+cost+"' WHERE `flwr_order`.`id_order` = '" + id_order + "'");
 		if (t == false) return false;
 		else return true;
 	}

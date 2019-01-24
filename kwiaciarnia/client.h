@@ -23,5 +23,7 @@ public:
 	void makeOrder(database & mysql);
 	void writeOrders(database mysql);
 	void cancelOrder(database mysql);
+	void orderHistory(database mysql);
+	void searchFlower(database mysql);
 };
 

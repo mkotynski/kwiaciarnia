@@ -18,16 +18,16 @@ bool session::login(database &mysql)
 	bool logged = 0;
 	obj log;
 	std::string login,pass;
-	login = "jaki";
-	pass = "tam";
+	//login = "login";
+	//pass = "haslo";
 	std::string query;
 	permission = 0;
 	while (!logged)
 	{
-		/*std::cout << "Podaj login: ";
+		std::cout << "Podaj login: ";
 		getline(std::cin, login);
 		std::cout << "Podaj haslo: ";
-		getline(std::cin, pass);*/
+		getline(std::cin, pass);
 		query = "SELECT * FROM `flwr_user` WHERE login = '" + login + "' and pass = '" + pass + "'";
 		if (mysql.isExist(query))
 		{
@@ -106,7 +106,7 @@ void session::setMenu(menu &m)
 {
 	if (permission == 0)
 	{
-		obj list = { "ZLOZ ZAMOWIENIE","TWOJE ZAMOWIENIA","HISTORIA ZAMOWIEN", "WYSZUKIWARKA KWIATOW", "WYLOGUJ" };
+		obj list = { "ZLOZ ZAMOWIENIE","TWOJE ZAMOWIENIA","ANULUJ ZAMOWIENIE","HISTORIA ZAMOWIEN", "WYSZUKIWARKA KWIATOW", "WYLOGUJ" };
 		m.setOptionVector(list);
 	}
 	if (permission == 1)
@@ -136,13 +136,19 @@ void session::getOptionForClient(database mysql, menu m, int &pointer, int &ente
 	case 3: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_patient.visitList(mysql);
+		_client.cancelOrder(mysql);
 		//_getch();
 	}; break;
 	case 4: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_patient.getOption_callOfVisit(mysql, m, pointer, enter);
+		_client.orderHistory(mysql);
+		//_getch();
+	}; break;
+	case 5: {
+		std::cout << std::endl;
+		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
+		_client.searchFlower(mysql);
 		//_getch();
 	}; break;
 	}

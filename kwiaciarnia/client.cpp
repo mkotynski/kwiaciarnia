@@ -155,6 +155,7 @@ void client::makeOrder(database &mysql)
 		mx.setPointer(xpointer, xenter);
 		if (xenter == 1)
 		{
+			cost = 0;
 			if (xpointer == mx.option.size()) xpointer = 0;
 			else if (xpointer == mx.option.size()-1)
 			{
@@ -168,6 +169,7 @@ void client::makeOrder(database &mysql)
 					_order.id_client = id_client;
 					_order._insert(mysql);
 					obj ret = mysql.retRow("select max(id_order) from flwr_order");
+
 					for (int a = 0; a < cart.size(); a++)
 					{
 						pos_order _pos_order;
@@ -177,7 +179,7 @@ void client::makeOrder(database &mysql)
 						_pos_order._insert(mysql);
 					}
 					order _o(mysql, ret[1]);
-					_o.cost = cost;
+					_o.cost = std::to_string(cost);
 					_o._update(mysql);
 					std::cout << "DODANO NOWE ZAMOWIENIE o wartosci " << cost << " PLN - CZEKAJ NA POTWIERDZENIE";
 					_getch();
@@ -320,14 +322,14 @@ void client::writeOrders(database mysql)
 		std::string stat;
 		list.clear();
 		snlist.clear();
-		list = _a.retAllOrders(mysql, " where id_client = '"+id_client+"' ");
+		list = _a.retAllOrders(mysql, " where id_client = '"+id_client+"' and status in (0,1)");
 		for (int i = 0; i < list.size(); i++)
 		{
 			if (stoi(list[i].status) == 0) stat = "Oczekuje na potwierdzenie";
 			else if (stoi(list[i].status) == 1) stat = "Potwierdzone - w realizacji";
 			else if (stoi(list[i].status) == 2) stat = "Anulowane";
 			else stat = "Nieokreslony";
-			assort = "ZAMOWIENIE #"+list[i].id_order + " | Data zlozenia zamowienia: " + list[i].date_order + " | Status: " + stat;
+			assort = "ZAMOWIENIE #"+list[i].id_order + " | ZLOZONO: " + list[i].date_order + " | " + stat;
 			snlist.push_back(assort);
 		}
 		snlist.push_back("Cofnij");
@@ -347,8 +349,9 @@ void client::writeOrders(database mysql)
 				for (int i = 0; i < a.pos_orders.size(); i++)
 				{
 					assortment assort(mysql, a.pos_orders[i].id_assortment);
-					std::cout << "#" << i << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+					std::cout << "#" << i+1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
 				}
+				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
 				_getch();
 				xenter = 0;
 			}
@@ -371,21 +374,20 @@ void client::cancelOrder(database mysql)
 		std::string stat;
 		list.clear();
 		snlist.clear();
-		list = _a.retAllOrders(mysql, " where id_client = '" + id_client + "' ");
+		list = _a.retAllOrders(mysql, " where id_client = '" + id_client + "' and status in (0,1) ");
 		for (int i = 0; i < list.size(); i++)
 		{
 			if (stoi(list[i].status) == 0) stat = "Oczekuje na potwierdzenie";
 			else if (stoi(list[i].status) == 1) stat = "Potwierdzone - w realizacji";
-			else if (stoi(list[i].status) == 2) stat = "Anulowane";
 			else stat = "Nieokreslony";
-			assort = "ZAMOWIENIE #" + list[i].id_order + " | Data zlozenia zamowienia: " + list[i].date_order + " | Status: " + stat;
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order + " | " + stat;
 			snlist.push_back(assort);
 		}
 		snlist.push_back("Cofnij");
 		mx.setOptionVector(snlist);
 		/****/
 		system("cls");
-		std::cout << " --- USUN OFERTE --- " << std::endl;
+		std::cout << " --- ANULUJ SWOJE ZAMOWIENIE --- " << std::endl;
 		mx.write(xpointer, xenter);
 		mx.setPointer(xpointer, xenter);
 		if (xenter == 1)
@@ -394,8 +396,108 @@ void client::cancelOrder(database mysql)
 			else
 			{
 				order a(mysql, list[xpointer - 1].id_order);
-				if (!a._delete(mysql)) std::cout << "Usunieto oferte";
-				else std::cout << "Nie mozna usunac";
+				if (!a._delete(mysql)) std::cout << "Anulowano zamowienie";
+				else std::cout << "Nie mozna anulowac";
+				xenter = 0;
+			}
+		}
+	}
+}
+
+void client::orderHistory(database mysql)
+{
+	order _a;
+	menu mx("Zamowienia klienta");
+	std::vector<std::string> snlist;
+	std::vector<order> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllOrders(mysql, " where id_client = '" + id_client + "' and status in (2,5)");
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (stoi(list[i].status) == 2) stat = "Anulowane";
+			else if (stoi(list[i].status) == 5) stat = "ZREALIZOWANE";
+			else stat = "Nieokreslony";
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order +" | ZREALIZOWANO: " + list[i].date_realization + " | " + stat;
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- HISTORIA ZAMOWIEN --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				order a(mysql, list[xpointer - 1].id_order);
+				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
+				for (int i = 0; i < a.pos_orders.size(); i++)
+				{
+					assortment assort(mysql, a.pos_orders[i].id_assortment);
+					std::cout << "#" << i << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+				}
+				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				_getch();
+				xenter = 0;
+			}
+		}
+	}
+}
+
+void client::searchFlower(database mysql)
+{
+	assortment _a;
+	std::string where;
+	menu mx("Asortyment");
+	std::vector<std::string> snlist;
+	std::vector<assortment> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllAssortment(mysql, where);
+		snlist.push_back("[ USTAW FILTRY WYSZUKIWANIA ]");
+		for (int i = 0; i < list.size(); i++)
+		{
+			assort = "#" + list[i].id_assortment + " | " + list[i].name + " | " + list[i].price + " PLN";
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- DOSTEPNY ASORTYMENT --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else if (xpointer == 1)
+			{
+				std::string filtr;
+				std::cout << "\nFiltruj wyniki wyszukiwania po nazwie: ";
+				getline(std::cin, filtr);
+				where = " where upper(name) like upper('%" + filtr + "%')";
+				xenter = 0;
+			}
+			else
+			{
 				xenter = 0;
 			}
 		}
