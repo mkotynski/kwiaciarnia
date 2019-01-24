@@ -25,5 +25,6 @@ public:
 	void cancelOrder(database mysql);
 	void orderHistory(database mysql);
 	void searchFlower(database mysql);
+	void realizeOrder(database mysql);
 };
 

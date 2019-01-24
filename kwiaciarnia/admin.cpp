@@ -85,10 +85,8 @@ void admin::deleteClient(database& mysql)
 			{
 				client c(mysql, list[xpointer - 1].id_client);
 				std::cout << c.id_user;
-				_getch();
 				if (!c._deleteC(mysql)) std::cout << "Usunieto klienta";
 				else std::cout << "Nie mozna usunac";
-				_getch();
 				xenter = 0;
 			}
 		}
@@ -169,11 +167,12 @@ void admin::cancelOrder(database mysql)
 		std::string stat;
 		list.clear();
 		snlist.clear();
-		list = _a.retAllOrders(mysql, " where status in (0,1) ");
+		list = _a.retAllOrders(mysql, " where status in (0,1,2) ");
 		for (int i = 0; i < list.size(); i++)
 		{
 			if (stoi(list[i].status) == 0) stat = "Oczekuje na potwierdzenie";
 			else if (stoi(list[i].status) == 1) stat = "Potwierdzone - w realizacji";
+			else if (stoi(list[i].status) == 2) stat = "Anulowane";
 			else stat = "Nieokreslony";
 			client _client(mysql, list[i].id_client);
 			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order + " | PRZEZ " + _client.surname + " " + _client.name + " | " + stat;
@@ -185,12 +184,12 @@ void admin::cancelOrder(database mysql)
 		system("cls");
 		std::cout << " --- POTWIERDZ / ANULUJ ZAMOWIENIE --- " << std::endl;
 		mx.write(xpointer, xenter);
-		mx.setPointer(xpointer, xenter);
+		//mx.setPointer(xpointer, xenter);
 		int it = _getch();
 		if (it == 77)
 		{
 			order a(mysql, list[xpointer - 1].id_order);
-			a.status = "1";
+			a.status = "0";
 			a._update(mysql);
 			xenter = 0;
 		}
@@ -218,8 +217,164 @@ void admin::cancelOrder(database mysql)
 			if (xpointer == mx.option.size()) xpointer = 0;
 			else
 			{
+				order a(mysql, list[xpointer - 1].id_order);
+				a.status = "1";
+				a._update(mysql);
 				xenter = 0;
 			}
 		}
 	}
+}
+
+void admin::writeOrders(database mysql)
+{
+	order _a;
+	menu mx("Zamowienia zatwierdzone");
+	std::vector<std::string> snlist;
+	std::vector<order> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllOrders(mysql, " where status = 1");
+		for (int i = 0; i < list.size(); i++)
+		{
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order;
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- ZAMOWIENIA ZATWIERDZONE DO REALIZACJI --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				order a(mysql, list[xpointer - 1].id_order);
+				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
+				for (int i = 0; i < a.pos_orders.size(); i++)
+				{
+					assortment assort(mysql, a.pos_orders[i].id_assortment);
+					std::cout << "#" << i + 1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+				}
+				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				_getch();
+				xenter = 0;
+			}
+		}
+	}
+}
+
+void admin::orderHistory(database mysql)
+{
+	order _a;
+	menu mx("Zamowienia zrealizowane");
+	std::vector<std::string> snlist;
+	std::vector<order> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllOrders(mysql, " where status = 5");
+		for (int i = 0; i < list.size(); i++)
+		{
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order;
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- ZAMOWIENIA ZREALIZOWANE --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				order a(mysql, list[xpointer - 1].id_order);
+				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
+				for (int i = 0; i < a.pos_orders.size(); i++)
+				{
+					assortment assort(mysql, a.pos_orders[i].id_assortment);
+					std::cout << "#" << i + 1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+				}
+				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				_getch();
+				xenter = 0;
+			}
+		}
+	}
+}
+
+void admin::realizeOrder(database mysql)
+{
+	order _a;
+	menu mx("Zamowienia do realizacji");
+	std::vector<std::string> snlist;
+	std::vector<order> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllOrders(mysql, " where status = 1 ");
+		for (int i = 0; i < list.size(); i++)
+		{
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order;
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- ZREALZUJ ZAMOWIENIE --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				order a(mysql, list[xpointer - 1].id_order);
+				a.status = "5";
+				a._update(mysql);
+				xenter = 0;
+			}
+		}
+	}
+}
+
+void admin::mostPopularFlower()
+{
+	/*
+	select flwr_assortment.name,sum(flwr_pos_order.id_assortment) from flwr_pos_order inner join flwr_order on flwr_order.id_order = flwr_pos_order.id_order inner join flwr_assortment on flwr_pos_order.id_assortment = flwr_assortment.id_assortment
+where flwr_order.status = 5
+group by flwr_assortment.id_assortment;
+
+select flwr_assortment.name,sum(flwr_pos_order.id_assortment) as ile from flwr_pos_order inner join flwr_order on flwr_order.id_order = flwr_pos_order.id_order inner join flwr_assortment on flwr_pos_order.id_assortment = flwr_assortment.id_assortment
+where flwr_order.status = 5
+group by flwr_assortment.id_assortment
+order by ile desc
+limit 5;
+	*/
 }

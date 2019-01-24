@@ -111,7 +111,7 @@ void session::setMenu(menu &m)
 	}
 	if (permission == 1)
 	{
-		obj list = { "POTWIERDZ/ANULUJ ZAMOWIENIE", "ZAMOWIENIA POTWIERDZONE","HISTORIA ZAMOWIEN", "DODAJ KLIENTA","USUN KLIENA","DODAJ NOWA OFERTE","EDYTUJ OFERTE", "USUN OFERTE", "WYLOGUJ" };
+		obj list = { "ZMIEN STATUS ZAMOWIENIA", "ZAMOWIENIA ZATWIERDZONE", "HISTORIA ZAMOWIEN", "ZREALIZUJ ZAMOWIENIE", "DODAJ KLIENTA","USUN KLIENA","DODAJ NOWA OFERTE","EDYTUJ OFERTE", "USUN OFERTE", "WYLOGUJ" };
 		m.setOptionVector(list);
 	}
 }
@@ -169,40 +169,46 @@ void session::getOptionForAdmin(database mysql, menu m, int &pointer, int &enter
 	case 2: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin.deleteClient(mysql);
+		_admin.writeOrders(mysql);
 		//_getch();
 	}; break;
 	case 3: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin._patient(mysql);
+		_admin.orderHistory(mysql);
 		//_getch();
 	}; break;
 	case 4: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_admin.addNewClient(mysql);
+		_admin.realizeOrder(mysql);
 		//_getch();
 	}; break;
 	case 5: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_admin.deleteClient(mysql);
+		_admin.addNewClient(mysql);
 		//_getch();
 	}; break;
 	case 6: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_admin.addNewOffert(mysql);
+		_admin.deleteClient(mysql);
 		//_getch();
 	}; break;
 	case 7: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin._statistic(mysql);
+		_admin.addNewOffert(mysql);
 		//_getch();
 	}; break;
 	case 8: {
+		std::cout << std::endl;
+		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
+		//_admin._statistic(mysql);
+		//_getch();
+	}; break;
+	case 9: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
 		_admin.deleteOffert(mysql);
