@@ -53,4 +53,5 @@ bool pos_order::_update(database &mysql)
 		else return true;
 	}
 	else return true;*/
+	return true;
 }

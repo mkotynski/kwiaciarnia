@@ -18,8 +18,8 @@ bool session::login(database &mysql)
 	bool logged = 0;
 	obj log;
 	std::string login,pass;
-	login = "user";
-	pass = "nazw";
+	login = "jaki";
+	pass = "tam";
 	std::string query;
 	permission = 0;
 	while (!logged)
@@ -41,7 +41,8 @@ bool session::login(database &mysql)
 	{
 		if (permission == 0)
 		{
-			/* obiekt client */
+			client _c(mysql, log[5]);
+			this->_client = _c;
 			return true;
 		}
 		if (permission == 1)
@@ -110,7 +111,7 @@ void session::setMenu(menu &m)
 	}
 	if (permission == 1)
 	{
-		obj list = { "POTWIERDZ ZAMOWIENIE", "ZAMOWIENIA POTWIERDZONE","HISTORIA ZAMOWIEN", "DODAJ KLIENTA","USUN KLIENA","EDYTUJ KLIENTA", "WYLOGUJ" };
+		obj list = { "POTWIERDZ ZAMOWIENIE", "ZAMOWIENIA POTWIERDZONE","HISTORIA ZAMOWIEN", "DODAJ KLIENTA","USUN KLIENA","DODAJ NOWA OFERTE","EDYTUJ OFERTE", "USUN OFERTE", "WYLOGUJ" };
 		m.setOptionVector(list);
 	}
 }
@@ -156,13 +157,13 @@ void session::getOptionForAdmin(database mysql, menu m, int &pointer, int &enter
 	case 1: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_admin.addNewClient(mysql);
+		//_admin.addNewClient(mysql);
 		//_getch();
 	}; break;
 	case 2: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_admin.deleteClient(mysql);
+		//_admin.deleteClient(mysql);
 		//_getch();
 	}; break;
 	case 3: {
@@ -174,19 +175,31 @@ void session::getOptionForAdmin(database mysql, menu m, int &pointer, int &enter
 	case 4: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin._clinic(mysql);
+		_admin.addNewClient(mysql);
 		//_getch();
 	}; break;
 	case 5: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin._visit(mysql);
+		_admin.deleteClient(mysql);
 		//_getch();
 	}; break;
 	case 6: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
+		_admin.addNewOffert(mysql);
+		//_getch();
+	}; break;
+	case 7: {
+		std::cout << std::endl;
+		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
 		//_admin._statistic(mysql);
+		//_getch();
+	}; break;
+	case 8: {
+		std::cout << std::endl;
+		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
+		_admin.deleteOffert(mysql);
 		//_getch();
 	}; break;
 	}

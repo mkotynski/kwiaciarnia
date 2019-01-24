@@ -48,10 +48,40 @@ bool assortment::_update(database &mysql)
 {
 	if (mysql.isExist("SELECT * FROM `flwr_assortment` WHERE `id_assortment` = '" + id_assortment + "';"))
 	{
-		bool t = mysql.query("UPDATE `flwr_order` SET `status` = '" + status + "', `date_realization` = '" + date_realization + "' WHERE `flwr_order`.`id_order` = '" + id_order + "'");
+		bool t = mysql.query("UPDATE `flwr_assortment` SET `name` = '" + name + "', `price` = '" + price + "', `count` = '" + count + "' WHERE `flwr_assortment`.`id_assortment` = '" + id_assortment + "';");
 		if (t == false) return false;
 		else return true;
 	}
 	else return true;
+}
+
+std::vector<assortment> assortment::retAllAssortment(database mysql)
+{
+	MYSQL_RES *res_set;
+	MYSQL_ROW row;
+	std::vector<assortment> assorts;
+	std::string query = "select flwr_assortment.id_assortment from flwr_assortment";
+	mysql_query(mysql.connect, query.c_str());
+	res_set = mysql_store_result(mysql.connect);
+	int numrows = mysql_num_rows(res_set);
+	int num_col = mysql_num_fields(res_set);
+	int i = 0;
+	assortment c;
+	while (((row = mysql_fetch_row(res_set)) != NULL))
+	{
+		i = 0;
+		while (i < num_col)
+		{
+			if (i == 0)
+			{
+				//std::cout << row[i] << "\n";
+				assortment cx(mysql, row[i]);
+				c = cx;
+			}
+			i++;
+		}
+		assorts.push_back(c);
+	}
+	return assorts;
 }
 

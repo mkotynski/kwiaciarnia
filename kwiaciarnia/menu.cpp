@@ -52,6 +52,16 @@ void menu::write(int pointer, int enter)
 			}
 			else std::cout << "[ " << std::setw(margin) << option[i - 1] << std::setw(margin) << " ]" << std::endl;
 		}
+		else if (type == 2)
+		{
+			if (pointer == i)
+			{
+				setHighlightColor(highlightColor);
+				std::cout << " " << std::setw(margin) << option[i - 1] << std::setw(margin) << " " << std::endl;
+				setHighlightColor(FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
+			}
+			else std::cout << " " << std::setw(margin) << option[i - 1] << std::setw(margin) << " " << std::endl;
+		}
 		else
 		{
 			if (pointer == i)

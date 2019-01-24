@@ -1,5 +1,8 @@
 #pragma once
 #include "user.h"
+#include "assortment.h"
+#include "menu.h"
+#include "order.h"
 typedef std::vector<std::string> obj;
 class client : public user
 {

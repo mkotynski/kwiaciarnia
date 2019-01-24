@@ -6,8 +6,8 @@ typedef std::vector<std::string> obj;
 
 class order
 {
-	std::string id_order, id_client, status, date_order, date_realization;
 public:
+	std::string id_order, id_client, status, date_order, date_realization;
 	order();
 	~order();
 	order(database & mysql, std::string id_order);
