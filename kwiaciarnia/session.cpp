@@ -130,7 +130,7 @@ void session::getOptionForClient(database mysql, menu m, int &pointer, int &ente
 	case 2: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_patient.registerForVisit(mysql);
+		_client.writeOrders(mysql);
 		//_getch();
 	}; break;
 	case 3: {

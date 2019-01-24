@@ -21,5 +21,7 @@ public:
 	bool _updateC(database &mysql);
 	std::vector<client> retAllClients(database mysql);
 	void makeOrder(database & mysql);
+	void writeOrders(database mysql);
+	void cancelOrder(database mysql);
 };
 

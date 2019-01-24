@@ -14,5 +14,6 @@ public:
 	bool _insert(database & mysql);
 	bool _delete(database & mysql);
 	bool _update(database & mysql);
+	std::vector<pos_order> retAllPosOrders(database mysql, std::string where);
 };
 

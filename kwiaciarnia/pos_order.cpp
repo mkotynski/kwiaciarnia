@@ -55,3 +55,33 @@ bool pos_order::_update(database &mysql)
 	else return true;*/
 	return true;
 }
+
+std::vector<pos_order> pos_order::retAllPosOrders(database mysql, std::string where)
+{
+	MYSQL_RES *res_set;
+	MYSQL_ROW row;
+	std::vector<pos_order> pos;
+	std::string query = "select flwr_pos_order.id_pos_order from flwr_pos_order" + where;
+	mysql_query(mysql.connect, query.c_str());
+	res_set = mysql_store_result(mysql.connect);
+	int numrows = mysql_num_rows(res_set);
+	int num_col = mysql_num_fields(res_set);
+	int i = 0;
+	pos_order c;
+	while (((row = mysql_fetch_row(res_set)) != NULL))
+	{
+		i = 0;
+		while (i < num_col)
+		{
+			if (i == 0)
+			{
+				//std::cout << row[i] << "\n";
+				pos_order cx(mysql, row[i]);
+				c = cx;
+			}
+			i++;
+		}
+		pos.push_back(c);
+	}
+	return pos;
+}

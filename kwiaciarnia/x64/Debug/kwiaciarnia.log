@@ -1,2 +1,1 @@
-﻿  validation.cpp
-  kwiaciarnia.vcxproj -> C:\Users\kotyn\OneDrive - Wojskowa Akademia Techniczna\Dokumenty\Projekty\kwiaciarnia\x64\Debug\kwiaciarnia.exe
+﻿LINK : fatal error LNK1168: nie można otworzyć pliku C:\Users\kotyn\OneDrive - Wojskowa Akademia Techniczna\Dokumenty\Projekty\kwiaciarnia\x64\Debug\kwiaciarnia.exe do zapisu

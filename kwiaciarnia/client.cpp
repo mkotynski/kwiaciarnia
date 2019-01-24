@@ -304,3 +304,100 @@ void client::makeOrder(database &mysql)
 		}
 	}
 }
+
+void client::writeOrders(database mysql)
+{
+	order _a;
+	menu mx("Zamowienia klienta");
+	std::vector<std::string> snlist;
+	std::vector<order> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllOrders(mysql, " where id_client = '"+id_client+"' ");
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (stoi(list[i].status) == 0) stat = "Oczekuje na potwierdzenie";
+			else if (stoi(list[i].status) == 1) stat = "Potwierdzone - w realizacji";
+			else if (stoi(list[i].status) == 2) stat = "Anulowane";
+			else stat = "Nieokreslony";
+			assort = "ZAMOWIENIE #"+list[i].id_order + " | Data zlozenia zamowienia: " + list[i].date_order + " | Status: " + stat;
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- TWOJE ZAMOWIENIA --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				order a(mysql, list[xpointer - 1].id_order);
+				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
+				for (int i = 0; i < a.pos_orders.size(); i++)
+				{
+					assortment assort(mysql, a.pos_orders[i].id_assortment);
+					std::cout << "#" << i << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+				}
+				_getch();
+				xenter = 0;
+			}
+		}
+	}
+}
+
+void client::cancelOrder(database mysql)
+{
+	order _a;
+	menu mx("Zamowienia klienta");
+	std::vector<std::string> snlist;
+	std::vector<order> list;
+	std::string assort;
+	mx.setHL(5);
+	int xpointer = 1, xenter = 0;
+	while (xpointer)
+	{
+		/****/
+		std::string stat;
+		list.clear();
+		snlist.clear();
+		list = _a.retAllOrders(mysql, " where id_client = '" + id_client + "' ");
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (stoi(list[i].status) == 0) stat = "Oczekuje na potwierdzenie";
+			else if (stoi(list[i].status) == 1) stat = "Potwierdzone - w realizacji";
+			else if (stoi(list[i].status) == 2) stat = "Anulowane";
+			else stat = "Nieokreslony";
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | Data zlozenia zamowienia: " + list[i].date_order + " | Status: " + stat;
+			snlist.push_back(assort);
+		}
+		snlist.push_back("Cofnij");
+		mx.setOptionVector(snlist);
+		/****/
+		system("cls");
+		std::cout << " --- USUN OFERTE --- " << std::endl;
+		mx.write(xpointer, xenter);
+		mx.setPointer(xpointer, xenter);
+		if (xenter == 1)
+		{
+			if (xpointer == mx.option.size()) xpointer = 0;
+			else
+			{
+				order a(mysql, list[xpointer - 1].id_order);
+				if (!a._delete(mysql)) std::cout << "Usunieto oferte";
+				else std::cout << "Nie mozna usunac";
+				xenter = 0;
+			}
+		}
+	}
+}
