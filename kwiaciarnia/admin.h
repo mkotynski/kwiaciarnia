@@ -10,6 +10,7 @@ public:
 	admin(database mysql, std::string id_user);
 	~admin();
 	void addNewClient(database & mysql);
+	void editClient(database & mysql);
 	void deleteClient(database & mysql);
 	void addNewOffert(database & mysql);
 	void deleteOffert(database & mysql);
@@ -17,6 +18,7 @@ public:
 	void writeOrders(database mysql);
 	void orderHistory(database mysql);
 	void realizeOrder(database mysql);
-	void mostPopularFlower();
+	void mostPopularFlower(database & mysql);
+	void statSpendMoney(database & mysql);
 };
 

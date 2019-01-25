@@ -111,7 +111,7 @@ void session::setMenu(menu &m)
 	}
 	if (permission == 1)
 	{
-		obj list = { "ZMIEN STATUS ZAMOWIENIA", "ZAMOWIENIA ZATWIERDZONE", "HISTORIA ZAMOWIEN", "ZREALIZUJ ZAMOWIENIE", "DODAJ KLIENTA","USUN KLIENA","DODAJ NOWA OFERTE","EDYTUJ OFERTE", "USUN OFERTE", "WYLOGUJ" };
+		obj list = { "ZMIEN STATUS ZAMOWIENIA", "ZAMOWIENIA ZATWIERDZONE", "HISTORIA ZAMOWIEN", "ZREALIZUJ ZAMOWIENIE", "DODAJ KLIENTA","EDYTUJ KLIENTA","USUN KLIENA","DODAJ NOWA OFERTE", "USUN OFERTE", "NAJPOPULARNIEJSZE KWIATKI","ZESTAWIENIE KLIENTOW Z NAJWIEKSZYMI WYDATKAMI", "WYLOGUJ" };
 		m.setOptionVector(list);
 	}
 }
@@ -193,25 +193,37 @@ void session::getOptionForAdmin(database mysql, menu m, int &pointer, int &enter
 	case 6: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_admin.deleteClient(mysql);
+		_admin.editClient(mysql);
 		//_getch();
 	}; break;
 	case 7: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		_admin.addNewOffert(mysql);
+		_admin.deleteClient(mysql);
 		//_getch();
 	}; break;
 	case 8: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
-		//_admin._statistic(mysql);
+		_admin.addNewOffert(mysql);
 		//_getch();
 	}; break;
 	case 9: {
 		std::cout << std::endl;
 		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
 		_admin.deleteOffert(mysql);
+		//_getch();
+	}; break;
+	case 10: {
+		std::cout << std::endl;
+		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
+		_admin.mostPopularFlower(mysql);
+		//_getch();
+	}; break;
+	case 11: {
+		std::cout << std::endl;
+		std::cout << " --- " << m.option[pointer - 1] << " --- " << std::endl;
+		_admin.statSpendMoney(mysql);
 		//_getch();
 	}; break;
 	}
