@@ -1,7 +1,5 @@
-﻿  admin.cpp
-c:\users\kotyn\onedrive - wojskowa akademia techniczna\dokumenty\projekty\kwiaciarnia\kwiaciarnia\admin.cpp(366): warning C4267: "=": konwersja z "size_t" do "int", możliwa utrata danych
-c:\users\kotyn\onedrive - wojskowa akademia techniczna\dokumenty\projekty\kwiaciarnia\kwiaciarnia\admin.cpp(535): warning C4244: "inicjowanie": konwersja z "my_ulonglong" do "int", możliwa utrata danych
-c:\users\kotyn\onedrive - wojskowa akademia techniczna\dokumenty\projekty\kwiaciarnia\kwiaciarnia\admin.cpp(563): warning C4244: "inicjowanie": konwersja z "my_ulonglong" do "int", możliwa utrata danych
-  session.cpp
-  Generowanie kodu...
+﻿  client.cpp
+c:\users\kotyn\onedrive - wojskowa akademia techniczna\dokumenty\projekty\kwiaciarnia\kwiaciarnia\client.cpp(89): warning C4244: "inicjowanie": konwersja z "my_ulonglong" do "int", możliwa utrata danych
+c:\users\kotyn\onedrive - wojskowa akademia techniczna\dokumenty\projekty\kwiaciarnia\kwiaciarnia\client.cpp(238): warning C4267: "=": konwersja z "size_t" do "int", możliwa utrata danych
+  LINK : nie znaleziono elementu C:\Users\kotyn\OneDrive - Wojskowa Akademia Techniczna\Dokumenty\Projekty\kwiaciarnia\x64\Debug\kwiaciarnia.exe ani nie zosta│ on skompilowany podczas ostatniego konsolidowania przyrostowego; zostanie wykonana pe│na konsolidacja
   kwiaciarnia.vcxproj -> C:\Users\kotyn\OneDrive - Wojskowa Akademia Techniczna\Dokumenty\Projekty\kwiaciarnia\x64\Debug\kwiaciarnia.exe

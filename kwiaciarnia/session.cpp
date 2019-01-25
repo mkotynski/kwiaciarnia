@@ -24,6 +24,8 @@ bool session::login(database &mysql)
 	permission = 0;
 	while (!logged)
 	{
+		system("cls");
+		std::cout << "---- PANEL LOGOWANIA ---- \n";
 		std::cout << "Podaj login: ";
 		getline(std::cin, login);
 		std::cout << "Podaj haslo: ";

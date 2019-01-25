@@ -420,7 +420,10 @@ void admin::writeOrders(database mysql)
 			else
 			{
 				order a(mysql, list[xpointer - 1].id_order);
-				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
+				client c(mysql, list[xpointer - 1].id_client);
+				std::cout << "\n\n \t\t FAKTURA #" << a.id_order;
+				std::cout << "KLIENT: " << c.surname << " " << c.name << " " << c.street << " " << c.post << " " << c.city << "\n";
+				std::cout << "\nPOZYCJE ZAMOWIENIA: \n";
 				for (int i = 0; i < a.pos_orders.size(); i++)
 				{
 					assortment assort(mysql, a.pos_orders[i].id_assortment);
@@ -452,7 +455,7 @@ void admin::orderHistory(database mysql)
 		list = _a.retAllOrders(mysql, " where status = 5");
 		for (int i = 0; i < list.size(); i++)
 		{
-			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order;
+			assort = "ZAMOWIENIE #" + list[i].id_order + " | ZLOZONO: " + list[i].date_order + " | ZREALIZOWANO: " + list[i].date_realization;
 			snlist.push_back(assort);
 		}
 		snlist.push_back("Cofnij");
@@ -468,13 +471,19 @@ void admin::orderHistory(database mysql)
 			else
 			{
 				order a(mysql, list[xpointer - 1].id_order);
-				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
+				client c(mysql, list[xpointer - 1].id_client);
+				std::cout << "\n\n----------------- FAKTURA #" << a.id_order << " -----------------";
+				std::cout << "\n\nKLIENT:\n " << c.surname << "\n " << c.name << "\n " << c.street << " " << c.post << " " << c.city << "\n";
+				std::cout << "\n DATA ZLOZENIA ZAMOWIENIA: " << a.date_order;
+				std::cout << "\n DATA REALIZACJI ZAMOWIENIA: " << a.date_realization;
+				std::cout << "\nPOZYCJE ZAMOWIENIA: \n";
 				for (int i = 0; i < a.pos_orders.size(); i++)
 				{
 					assortment assort(mysql, a.pos_orders[i].id_assortment);
-					std::cout << "#" << i + 1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+					std::cout << " #" << i + 1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
 				}
-				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				std::cout << "\nLACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				std::cout << "----------------------------------------------";
 				_getch();
 				xenter = 0;
 			}
@@ -517,6 +526,8 @@ void admin::realizeOrder(database mysql)
 			{
 				order a(mysql, list[xpointer - 1].id_order);
 				a.status = "5";
+				obj ret = mysql.retRow("select current_date");
+				a.date_realization = ret[1];
 				a._update(mysql);
 				xenter = 0;
 			}
@@ -543,7 +554,8 @@ void admin::mostPopularFlower(database &mysql)
 		std::cout << j + 1 << ". ";
 		while (i < num_col)
 		{
-			std::cout << " " << row[i] << " ";
+			if (i == 1) std::cout << "\t\t" << row[i] << " sztuk zakupionych";
+			else std::cout << " " << row[i] << " ";
 			i++;
 		}
 		std::cout << "\n";
@@ -571,7 +583,8 @@ void admin::statSpendMoney(database &mysql)
 		std::cout << j + 1 << ". ";
 		while (i < num_col)
 		{
-			std::cout << " " << row[i] << " ";
+			if (i == 2) std::cout << "\t\t" << row[i] << " PLN wydanych";
+			else std::cout << " " << row[i] << " ";
 			i++;
 		}
 		std::cout << "\n";

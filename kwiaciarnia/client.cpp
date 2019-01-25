@@ -441,13 +441,19 @@ void client::orderHistory(database mysql)
 			else
 			{
 				order a(mysql, list[xpointer - 1].id_order);
-				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
+				client c(mysql, id_client);
+				std::cout << "\n\n----------------- FAKTURA #" << a.id_order << " -----------------";
+				std::cout << "\n\nKLIENT:\n " << c.surname << "\n " << c.name << "\n " << c.street << " " << c.post << " " << c.city << "\n";
+				std::cout << "\n DATA ZLOZENIA ZAMOWIENIA: " << a.date_order;
+				std::cout << "\n DATA REALIZACJI ZAMOWIENIA: " << a.date_realization;
+				std::cout << "\nPOZYCJE ZAMOWIENIA: \n";
 				for (int i = 0; i < a.pos_orders.size(); i++)
 				{
 					assortment assort(mysql, a.pos_orders[i].id_assortment);
-					std::cout << "#" << i << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+					std::cout << " #" << i + 1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
 				}
-				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				std::cout << "\nLACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				std::cout << "----------------------------------------------";
 				_getch();
 				xenter = 0;
 			}
