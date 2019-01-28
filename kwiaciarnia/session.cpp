@@ -25,6 +25,11 @@ bool session::login(database &mysql)
 	while (!logged)
 	{
 		system("cls");
+		std::cout << " *******************************************************" << std::endl;
+		std::cout << " *                                                     *" << std::endl;
+		std::cout << " *                       Kwiaciarnia                   *" << std::endl;
+		std::cout << " *                                                     *" << std::endl;
+		std::cout << " *******************************************************" << std::endl << std::endl;
 		std::cout << "---- PANEL LOGOWANIA ---- \n";
 		std::cout << "Podaj login: ";
 		getline(std::cin, login);

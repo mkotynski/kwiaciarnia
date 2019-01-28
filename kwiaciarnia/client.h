@@ -10,7 +10,7 @@ typedef std::vector<std::string> obj;
 class client : public user
 {
 public:
-	std::string id_user, name, surname, dateOfBirth, city, street, post;
+	std::string id_user, name, surname, dateOfBirth, city, street, post, email;
 	bool _setParameters(database & mysql);
 	bool _setParametersC(database & mysql);
 	client(database mysql, std::string id_client);

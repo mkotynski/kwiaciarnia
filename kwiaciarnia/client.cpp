@@ -15,6 +15,7 @@ bool client::_setParametersC(database & mysql)
 		this->city = ret[6];
 		this->street = ret[7];
 		this->post = ret[8];
+		this->email = ret[9];
 
 		return false;
 	}
@@ -48,7 +49,7 @@ bool client::_insertC(database &mysql)
 {
 	this->_insert(mysql);
 	obj ret1 = mysql.retRow("select max(id_user) from flwr_user;");
-	bool t = mysql.query("INSERT INTO `flwr_client` (`id_user`, `name`, `surname`, `dateOfBirth`, `city`, `street`, `post`) VALUES ('" + ret1[1] + "', '" + name + "', '" + surname + "', '" + dateOfBirth + "', '" + city + "', '" + street + "', '" + post + "');");
+	bool t = mysql.query("INSERT INTO `flwr_client` (`id_user`, `name`, `surname`, `dateOfBirth`, `city`, `street`, `post`, 'email') VALUES ('" + ret1[1] + "', '" + name + "', '" + surname + "', '" + dateOfBirth + "', '" + city + "', '" + street + "', '" + post + "', '" + email + "');");
 	obj ret = mysql.retRow("select max(flwr_client.id_client), max(flwr_user.id_user) from flwr_client, flwr_user;");
 	user _u(mysql, ret[2]);
 	_u.id_client = ret[1];
@@ -72,7 +73,7 @@ bool client::_deleteC(database &mysql)
 
 bool client::_updateC(database &mysql)
 {
-	bool t = mysql.query("UPDATE `flwr_client` SET `name` = '" + name + "', `surname` = '" + surname + "', `dateOfBirth` = '" + dateOfBirth + "', `city` = '" + city + "', `street` = '" + street + "', `post` = '" + post + "' WHERE `flwr_client`.`id_client` = '" + id_client + "';");
+	bool t = mysql.query("UPDATE `flwr_client` SET `name` = '" + name + "', `surname` = '" + surname + "', `dateOfBirth` = '" + dateOfBirth + "', `city` = '" + city + "', `street` = '" + street + "', `post` = '" + post + "', `email` = '" + email + "' WHERE `flwr_client`.`id_client` = '" + id_client + "';");
 	if (t == false) return false;
 	else return true;
 }
@@ -141,12 +142,15 @@ void client::makeOrder(database &mysql)
 		mx.setOptionVector(snlist);
 		/****/
 		system("cls");
+			auto licznik = [i = 0]() mutable { std::cout <<  ++i ; };
+
 		int cost = 0;
 		std::cout << " --- WYBIERZ PRZEDMIOT KTORY CHCESZ DODAC DO KOSZYKA --- " << std::endl;
 		std::cout << "\nTWOJ KOSZYK: \n";
 		for (int i = 0; i < cart.size(); i++)
 		{
-			std::cout << std::to_string(i+1) + ". " + cart[i].name << " |\t ILOSC: " << count[i] << "\n";
+			licznik();
+			std::cout << ". " + cart[i].name << " |\t ILOSC: " << count[i] << "\n";
 			cost = cost + std::stoi(cart[i].price)*count[i];
 		}
 		std::cout << "\nAKTUALNA WARTOSC KOSZYKA: " << cost << " PLN";
@@ -218,10 +222,10 @@ void client::makeOrder(database &mysql)
 							std::cout << "Podaj nowa ilosc: ";
 							getline(std::cin, ab);
 							if (validation::isnum(ab)) {
-								int a = validation::conv(ab);
-								if (a > 0)
+								int c = validation::conv(ab);
+								if (c > 0)
 								{
-									count[zpointer - 1] = a;
+									count[zpointer - 1] = c;
 									std::cout << "Zmieniono ilosc wybranego przedmiotu";
 								}
 							}
@@ -276,14 +280,14 @@ void client::makeOrder(database &mysql)
 				}
 				if (is == 0)
 				{
-					cart.push_back(a);
 					std::cout << "\n Podaj ilosc: ";
 					getline(std::cin, ab);
 					if (validation::isnum(ab)) {
-						int a = validation::conv(ab);
-						if (a > 0)
+						int c = validation::conv(ab);
+						if (c > 0)
 						{
-							count.push_back(a);
+							cart.push_back(a);
+							count.push_back(c);
 							std::cout << "Dodano do koszyka";
 						}
 					}
@@ -293,10 +297,10 @@ void client::makeOrder(database &mysql)
 					std::cout << "\n Podaj nowa ilosc: ";
 					getline(std::cin, ab);
 					if (validation::isnum(ab)) {
-						int a = validation::conv(ab);
-						if (a > 0)
+						int c = validation::conv(ab);
+						if (c > 0)
 						{
-							count[j] = a;
+							count[j] = c;
 							std::cout << "Zmieniono ilosc wybranego przedmiotu";
 						}
 					}
@@ -344,14 +348,40 @@ void client::writeOrders(database mysql)
 			if (xpointer == mx.option.size()) xpointer = 0;
 			else
 			{
+				/*order a(mysql, list[xpointer - 1].id_order);
+				client c(mysql, list[xpointer - 1].id_client);
+				std::cout << "\n\n \t\t FAKTURA #" << a.id_order;
+				std::cout << "KLIENT: " << c.surname << " " << c.name << " " << c.street << " " << c.post << " " << c.city << "\n";
+				std::cout << "\nPOZYCJE ZAMOWIENIA: \n";
+				for (int i = 0; i < a.pos_orders.size(); i++)
+				{
+					assortment assort(mysql, a.pos_orders[i].id_assortment);
+					std::cout << "#" << i + 1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+				}
+				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				_getch();*/
 				order a(mysql, list[xpointer - 1].id_order);
+				client c(mysql, id_client);
+				std::cout << "\n\n----------------- ZAMOWIENIE #" << a.id_order << " -----------------";
+				std::cout << "\n\nKLIENT:\n " << c.surname << "\n " << c.name << "\n " << c.street << " " << c.post << " " << c.city << "\n";
+				std::cout << "\n DATA ZLOZENIA ZAMOWIENIA: " << a.date_order;
+				//std::cout << "\n DATA REALIZACJI ZAMOWIENIA: " << a.date_realization;
+				std::cout << "\nPOZYCJE ZAMOWIENIA: \n";
+				for (int i = 0; i < a.pos_orders.size(); i++)
+				{
+					assortment assort(mysql, a.pos_orders[i].id_assortment);
+					std::cout << " #" << i + 1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
+				}
+				std::cout << "\nLACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				std::cout << "----------------------------------------------";
+				/*order a(mysql, list[xpointer - 1].id_order);
 				std::cout << "\nPOZYCJE ZAMOWIENIA O NR " << a.id_order << " \n";
 				for (int i = 0; i < a.pos_orders.size(); i++)
 				{
 					assortment assort(mysql, a.pos_orders[i].id_assortment);
 					std::cout << "#" << i+1 << ". " << assort.name << " " << assort.price << " PLN | " << "Ilosc: " << a.pos_orders[i].count << "\n";
 				}
-				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";
+				std::cout << "LACZNE KOSZTY ZAMOWIENIA: " << a.cost << " PLN\n";*/
 				_getch();
 				xenter = 0;
 			}

@@ -14,13 +14,6 @@ int main()
 
 	user uz;
 
-/*	uz.login = "jakislogin";
-	uz.pass = "haslo";
-	uz.permission = "0";
-	uz.id_client = "1";
-
-	std::cout << uz._insert(mysql);*/
-
 	session ses;
 	if (ses.login(mysql))
 		ses.works(mysql);

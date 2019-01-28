@@ -40,14 +40,25 @@ void admin::addNewClient(database& mysql)
 	std::getline(std::cin, _client.post);
 	std::cout << "Podaj miejscowosc: ";
 	std::getline(std::cin, _client.city);
+	std::cout << "Podaj adres email: ";
+	std::getline(std::cin, _client.email);
 	std::cout << std::endl;
 	if (!validation::isPost(_client.post))
 	{
-		if (!_client._insertC(mysql))
+		if (!validation::isAppropriateLength(_client.login,0,40) && !validation::isAppropriateLength(_client.pass,0,40)) 
 		{
-			std::cout << "Dodano klienta";;
+			if (!validation::isAppropriateLength(_client.email, 1, 50))
+			{
+				if (!_client._insertC(mysql))
+				{
+					std::cout << "Dodano klienta";;
+				}
+			}
+			else std::cout << "Podaj adres email!";
 		}
 	}
+	else std::cout << "Nie wypelniles poprawnie danych";
+	_getch();
 }
 
 void admin::editClient(database &mysql)
@@ -93,7 +104,7 @@ void admin::editClient(database &mysql)
 					/***/
 					std::string input;
 					list.clear();
-					list = { "Imie: " + d.name, "Nazwisko: " + d.surname, "Adres (ulica nr domu): " + d.street, "Kod pocztowy: " + d.post, "Miejscowosc: " + d.city };
+					list = { "Imie: " + d.name, "Nazwisko: " + d.surname, "Adres (ulica nr domu): " + d.street, "Kod pocztowy: " + d.post, "Miejscowosc: " + d.city,  "Email: " + d.email };
 					list.push_back("Cofnij");
 					_menu.setOptionVector(list);
 					/****/
@@ -189,6 +200,22 @@ void admin::editClient(database &mysql)
 								else std::cout << "Niepoprawna dlugosc!";
 							};
 							break;
+							case 6:
+							{
+								std::cout << std::endl << "Podaj nowy adres elektroniczny (email) (" << d.email << "): ";
+								getline(std::cin, input);
+								if (!validation::isAppropriateLength(input, 2, 40))
+								{
+									d.email = input;
+									if (!d._updateC(mysql))
+									{
+										std::cout << "Edytowano email klienta";
+										_getch();
+									}
+								}
+								else std::cout << "Niepoprawna dlugosc!";
+							};
+							break;
 							}
 						}
 						yenter = 0;
@@ -261,13 +288,23 @@ void admin::addNewOffert(database& mysql)
 		_assortment.name = input;
 		if (!validation::isAppropriateLength(input2, 0, 40))
 		{
-			_assortment.price = input2;
-			if (!_assortment._insert(mysql))
-			{
-				std::cout << "Dodano nowa pozycje do ofert";;
+			if (validation::isnum(input2)) {
+				int a = validation::conv(input2);
+				if (a > 0)
+				{
+					_assortment.price = input2;
+					if (!_assortment._insert(mysql))
+					{
+						std::cout << "Dodano nowa pozycje do ofert";;
+					}
+				}
+				else std::cout << "Niepoprawnie wypelniono cena musi byc >0";
 			}
+			else std::cout << "Niepoprawnie wypelniono";
 		}
+		else std::cout << "Niepoprawnie wypelniono";
 	}
+	_getch();
 }
 
 void admin::deleteOffert(database& mysql)
